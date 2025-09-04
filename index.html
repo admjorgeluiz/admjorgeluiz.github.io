@@ -55,6 +55,14 @@
         a:hover {
             text-decoration: underline;
         }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas pequenas */
+            gap: 15px; /* Espaço entre os botões */
+            margin-bottom: 20px;
+        }
         .download-button {
             display: inline-block;
             background-color: #ffffff;
@@ -63,7 +71,6 @@
             border-radius: 50px;
             font-weight: bold;
             text-decoration: none;
-            margin-bottom: 20px;
             transition: background-color 0.3s, transform 0.3s;
         }
         .download-button:hover {
@@ -81,7 +88,10 @@
     </main>
 
     <footer class="footer">
-        <p><a href="https://play.google.com/store/apps/details?id=com.jorgenascimento.tvplayer" class="download-button" target="_blank">Baixar na Google Play</a></p>
+        <div class="button-container">
+            <a href="https://play.google.com/store/apps/details?id=com.jorgenascimento.tvplayer" class="download-button" target="_blank">Baixar na Google Play</a>
+            <a href="https://github.com/admjorgeluiz/TVPlayerMAUI/releases/latest/download/com.jorgenascimento.tvplayer-Signed.apk" class="download-button">Baixar APK (GitHub)</a>
+        </div>
         
         <p><a href="privacy.html">Política de Privacidade</a></p>
         <p>&copy; 2025 Jorge Nascimento. Todos os direitos reservados.</p>
