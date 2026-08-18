@@ -10,7 +10,7 @@
             line-height: 1.6; 
             margin: 0;
             padding: 20px; 
-            color: #f0f0f0; /* Cor do texto para o rodapé */
+            color: #f0f0f0; 
             background: linear-gradient(to bottom right, #0052D4, #4364F7, #6FB1FC);
             display: flex;
             flex-direction: column;
@@ -21,7 +21,7 @@
         }
         .card {
             background: rgba(255, 255, 255, 0.95);
-            color: #333; /* Cor do texto dentro do cartão */
+            color: #333; 
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -42,41 +42,53 @@
             font-size: 1.2em;
             color: #555;
             margin-top: 0;
-        }
-        .footer {
-            margin-top: 40px;
-            font-size: 0.9em;
-        }
-        a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            text-decoration: underline;
+            margin-bottom: 30px;
         }
         .button-container {
             display: flex;
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas pequenas */
-            gap: 15px; /* Espaço entre os botões */
-            margin-bottom: 20px;
+            gap: 15px; 
+            margin-bottom: 10px;
         }
         .download-button {
-            display: inline-block;
-            background-color: #ffffff;
-            color: #0052D4;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            background-color: #0052D4;
+            color: #ffffff;
             padding: 12px 24px;
             border-radius: 50px;
             font-weight: bold;
             text-decoration: none;
             transition: background-color 0.3s, transform 0.3s;
+            box-sizing: border-box;
         }
         .download-button:hover {
-            background-color: #f0f0f0;
-            transform: scale(1.05);
+            background-color: #003a99;
+            transform: scale(1.02);
             text-decoration: none;
+        }
+        .download-button.secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        .download-button.secondary:hover {
+            background-color: #e0e0e0;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -84,17 +96,51 @@
     <main class="card">
         <img src="https://github.com/admjorgeluiz/tvplayer-homepage/blob/main/TVPlayer_icon.png?raw=true" alt="Ícone do TVPlayer" class="app-icon">
         <h1>TVPlayer</h1>
-        <p class="subtitle">O seu reprodutor de listas M3U para Android.</p>
+        <p class="subtitle">O seu reprodutor de listas M3U para Android e Windows.</p>
+
+        <div class="button-container">
+            <a href="https://play.google.com/store/apps/details?id=com.jorgenascimento.tvplayer" class="download-button" target="_blank">Baixar na Google Play</a>
+            
+            <!-- Os links abaixo serão atualizados dinamicamente pelo JavaScript -->
+            <a href="https://github.com/admjorgeluiz/TVPlayerMAUI/releases/latest" id="apk-link" class="download-button secondary" target="_blank">Baixar APK (Android)</a>
+            <a href="https://github.com/admjorgeluiz/TVPlayerMAUI/releases/latest" id="exe-link" class="download-button secondary" target="_blank">Baixar EXE (Windows)</a>
+        </div>
     </main>
 
     <footer class="footer">
-        <div class="button-container">
-            <a href="https://play.google.com/store/apps/details?id=com.jorgenascimento.tvplayer" class="download-button" target="_blank">Baixar na Google Play</a>
-            /* <a href="https://github.com/admjorgeluiz/TVPlayerMAUI/releases/latest/download/com.jorgenascimento.tvplayer-Signed.apk" class="download-button">Baixar APK (GitHub)</a> */
-        </div>
-        
         <p><a href="privacy.html">Política de Privacidade</a></p>
-        <p>&copy; 2025 Jorge Nascimento. Todos os direitos reservados.</p>
+        <p>&copy; 2026 Jorge Nascimento. Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+        // Função para buscar dinamicamente os links de download reais da última release
+        async function fetchLatestRelease() {
+            try {
+                const response = await fetch('https://api.github.com/repos/admjorgeluiz/TVPlayerMAUI/releases/latest');
+                if (!response.ok) {
+                    throw new Error('Falha na resposta da API do GitHub');
+                }
+                const data = await response.json();
+                
+                // Encontra os arquivos .apk e .exe dentro dos assets da release
+                const apkAsset = data.assets.find(asset => asset.name.endsWith('.apk'));
+                const exeAsset = data.assets.find(asset => asset.name.endsWith('.exe'));
+                
+                // Atualiza o link href dos botões com o endereço correto do arquivo
+                if (apkAsset) {
+                    document.getElementById('apk-link').href = apkAsset.browser_download_url;
+                }
+                if (exeAsset) {
+                    document.getElementById('exe-link').href = exeAsset.browser_download_url;
+                }
+            } catch (error) {
+                console.error('Erro ao buscar a versão mais recente:', error);
+                // Em caso de erro, os botões continuam direcionando para a página "latest"
+            }
+        }
+
+        // Executa a busca assim que a página é carregada
+        fetchLatestRelease();
+    </script>
 </body>
 </html>
