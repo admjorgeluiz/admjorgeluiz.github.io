@@ -101,8 +101,6 @@
         <div class="button-container">
             <a href="https://play.google.com/store/apps/details?id=com.jorgenascimento.tvplayer" class="download-button" target="_blank">Baixar na Google Play</a>
             
-            <!-- Os links abaixo serão atualizados dinamicamente pelo JavaScript -->
-            <a href="https://github.com/admjorgeluiz/TVPlayerMAUI/releases/latest" id="apk-link" class="download-button secondary" target="_blank">Baixar APK (Android)</a>
             <a href="https://github.com/admjorgeluiz/TVPlayerMAUI/releases/latest" id="exe-link" class="download-button secondary" target="_blank">Baixar EXE (Windows)</a>
         </div>
     </main>
@@ -113,7 +111,6 @@
     </footer>
 
     <script>
-        // Função para buscar dinamicamente os links de download reais da última release
         async function fetchLatestRelease() {
             try {
                 const response = await fetch('https://api.github.com/repos/admjorgeluiz/TVPlayerMAUI/releases/latest');
@@ -122,24 +119,16 @@
                 }
                 const data = await response.json();
                 
-                // Encontra os arquivos .apk e .exe dentro dos assets da release
-                const apkAsset = data.assets.find(asset => asset.name.endsWith('.apk'));
                 const exeAsset = data.assets.find(asset => asset.name.endsWith('.exe'));
                 
-                // Atualiza o link href dos botões com o endereço correto do arquivo
-                if (apkAsset) {
-                    document.getElementById('apk-link').href = apkAsset.browser_download_url;
-                }
                 if (exeAsset) {
                     document.getElementById('exe-link').href = exeAsset.browser_download_url;
                 }
             } catch (error) {
                 console.error('Erro ao buscar a versão mais recente:', error);
-                // Em caso de erro, os botões continuam direcionando para a página "latest"
             }
         }
 
-        // Executa a busca assim que a página é carregada
         fetchLatestRelease();
     </script>
 </body>
