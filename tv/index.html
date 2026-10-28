@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>TVPlayer Smart TV — Configurar Lista remotamente</title>
+  <link rel="icon" type="image/png" href="../TVPlayer_icon.png" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      background: linear-gradient(160deg, #041c32 0%, #06111c 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      padding: 18px 14px 40px 14px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .card {
+      width: 100%;
+      max-width: 470px;
+      background: #111827;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      padding: 24px 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .brand-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+    .brand-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      object-fit: cover;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #6d3ef2, #2563eb);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.4px;
+    }
+    h1 { font-size: 21px; font-weight: 800; text-align: center; }
+    .sub { font-size: 13px; color: #94a3b8; text-align: center; line-height: 1.4; }
+    .code-row {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .code-row span { font-size: 13px; font-weight: 700; color: #cbd5e1; }
+    .code-input {
+      width: 115px;
+      background: #0b0f17;
+      border: 1.5px solid #38bdf8;
+      border-radius: 8px;
+      color: #f4e154;
+      font-weight: 900;
+      font-size: 16px;
+      text-align: center;
+      padding: 6px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: #0b0f17;
+      padding: 5px;
+      border-radius: 12px;
+    }
+    .tab {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 11px 6px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab.active { background: #6d3ef2; color: #fff; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    label { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+    input, textarea {
+      width: 100%;
+      background: #0b0f17;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 12px;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: #38bdf8; }
+    .btn {
+      margin-top: 6px;
+      background: linear-gradient(135deg, #6d3ef2, #3b82f6);
+      border: none;
+      color: #fff;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      transition: opacity 0.2s;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: none;
+      line-height: 1.4;
+    }
+    .msg.ok { display: block; background: rgba(34, 197, 94, 0.16); border: 1px solid #22c55e; color: #86efac; }
+    .msg.err { display: block; background: rgba(239, 68, 68, 0.18); border: 1px solid #ef4444; color: #fca5a5; }
+    .footer-link {
+      text-align: center;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+    .footer-link a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand-header">
+      <img src="../TVPlayer_icon.png" alt="TVPlayer" class="brand-icon" />
+      <div class="badge">📺 TVPlayer Smart TV</div>
+      <h1>Configurar Lista na TV</h1>
+      <p class="sub">Cole o link da sua lista abaixo e envie direto para a sua TV Samsung em tempo real.</p>
+    </div>
+
+    <div class="code-row">
+      <span>Código exibido na TV:</span>
+      <input id="pairCode" class="code-input" maxlength="8" placeholder="CÓDIGO" />
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('url')">🔗 Link M3U</button>
+      <button class="tab" onclick="switchTab('xtream')">🔑 Xtream Codes</button>
+    </div>
+
+    <div id="statusBox" class="msg"></div>
+
+    <div id="panel-url" class="form-group">
+      <label>Cole o Link da Lista (.m3u ou .m3u8)</label>
+      <textarea id="m3uUrl" rows="3" placeholder="http://servidor.com/get.php?username=...&password=...&type=m3u_plus"></textarea>
+      <button id="btnSendUrl" class="btn" onclick="sendUrl()">🚀 Enviar Lista para a TV</button>
+    </div>
+
+    <div id="panel-xtream" class="form-group" style="display:none">
+      <label>Servidor (DNS:Porta)</label>
+      <input id="xtServer" type="url" placeholder="http://servidor.exemplo.com:80" />
+      <label>Usuário</label>
+      <input id="xtUser" type="text" placeholder="Digite seu usuário" />
+      <label>Senha</label>
+      <input id="xtPass" type="password" placeholder="Digite sua senha" />
+      <button id="btnSendXtream" class="btn" onclick="sendXtream()">🚀 Conectar Xtream na TV</button>
+    </div>
+
+    <div class="footer-link">
+      <a href="../index.html">← Voltar para a página inicial do TVPlayer</a>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const initialCode = (params.get('pair') || '').trim().toUpperCase();
+    if (initialCode) {
+      document.getElementById('pairCode').value = initialCode;
+    }
+
+    function switchTab(tab) {
+      const tabs = document.querySelectorAll('.tab');
+      tabs[0].className = 'tab' + (tab === 'url' ? ' active' : '');
+      tabs[1].className = 'tab' + (tab === 'xtream' ? ' active' : '');
+      document.getElementById('panel-url').style.display = tab === 'url' ? 'flex' : 'none';
+      document.getElementById('panel-xtream').style.display = tab === 'xtream' ? 'flex' : 'none';
+      document.getElementById('statusBox').className = 'msg';
+    }
+
+    function showMsg(type, text) {
+      const box = document.getElementById('statusBox');
+      box.className = 'msg ' + type;
+      box.textContent = text;
+    }
+
+    async function postPayload(payload, btnId) {
+      const code = document.getElementById('pairCode').value.trim().toUpperCase();
+      if (!code) {
+        return showMsg('err', 'Digite o Código de 6 caracteres que aparece na sua TV.');
+      }
+
+      const btn = document.getElementById(btnId);
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Enviando para a TV...';
+      showMsg('ok', '⏳ Conectando com a sua TV Samsung...');
+
+      const fullPayload = Object.assign({}, payload, {
+        code: code,
+        timestamp: Date.now()
+      });
+
+      try {
+        const res = await fetch('https://ntfy.sh/tvplayer_samsung_' + encodeURIComponent(code), {
+          method: 'POST',
+          body: JSON.stringify(fullPayload)
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        showMsg('ok', '✅ Lista enviada com sucesso! Olhe para a sua TV: os canais já estão carregando.');
+      } catch (e) {
+        showMsg('err', 'Erro ao enviar: ' + e.message + '. Verifique sua conexão com a internet.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
+
+    function sendUrl() {
+      const u = document.getElementById('m3uUrl').value.trim();
+      if (!u) return showMsg('err', 'Cole a URL da lista M3U antes de enviar.');
+      postPayload({ type: 'm3u_url', m3uUrl: u }, 'btnSendUrl');
+    }
+
+    function sendXtream() {
+      const s = document.getElementById('xtServer').value.trim().replace(/\/+$/, '');
+      const u = document.getElementById('xtUser').value.trim();
+      const p = document.getElementById('xtPass').value.trim();
+      if (!s || !u || !p) return showMsg('err', 'Preencha Servidor, Usuário e Senha.');
+      const m3uUrl = s + '/get.php?username=' + encodeURIComponent(u) + '&password=' + encodeURIComponent(p) + '&type=m3u_plus&output=m3u8';
+      postPayload({ type: 'xtream', serverUrl: s, username: u, password: p, m3uUrl: m3uUrl }, 'btnSendXtream');
+    }
+  </script>
+</body>
+</html>
